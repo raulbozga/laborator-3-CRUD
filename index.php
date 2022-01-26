@@ -13,16 +13,19 @@
 </head>
 
 <body>
+    <!-- aici includem proccess.php in index  -->
     <?php require_once 'process.php'; ?>
 
     <?php
-
+    //aici verificam daca mesajul a fost afisat 
     if (isset($_SESSION['message'])) :
 
     ?>
-
+        <!-- //aici folosim clasa bootstrap  alert pentru a afisa mesajul -->
+        <!-- schimband culoarea mesajului -->
         <div class="alert alert-<?= $_SESSION['msg_type'] ?>">
 
+            <!-- aici afisam mesajul -->
             <?php echo $_SESSION['message'];
             unset($_SESSION['message']);
             ?>
@@ -32,13 +35,16 @@
     <div class="container">
 
         <?php
-
+        //aici ne conectam la baza de date si vom stoca in variabila result datele
+        //vom selecta tot ce se afla in baza de date pentru a afisa 
         $mysqli = new mysqli('localhost', 'root', 'parola123', 'crud') or die(mysqli_error($mysqli));
         $result = $mysqli->query("select * from data") or die($mysqli->error);
 
         ?>
 
-        <div class="justify-content-center">
+        <div class="row justify-content-center">
+
+            <!-- //aici cream un table in care  care afisam datele -->
             <table class="table">
 
                 <thead>
@@ -50,15 +56,20 @@
 
                 </thead>
                 <?php
-
+                //aici cu ajutorul while si  fetch_assoc parcurgem pe rand datele si le vom afisa
+                //si le stocam in variabila row
                 while ($row = $result->fetch_assoc()) :
 
                 ?>
 
                     <tr>
+                        <!-- //aici printam valorile din nume si adresa -->
                         <td><?php echo $row['nume']; ?></td>
                         <td><?php echo $row['adresa']; ?></td>
                         <td>
+                            <!-- //aici avem butoanele de delete si edit -->
+                            <!-- facem legatura intre butoane si unde se vor face modificarile
+                            butonul de edit fiind in index.php si cel de delete in proccess.php -->
                             <a href="index.php?edit=<?php echo $row['id']; ?>" class="btn btn-info">Edit</a>
                             <a href="process.php?delete=<?php echo $row['id']; ?>" class="btn btn-danger">Delete</a>
                         </td>
@@ -70,6 +81,7 @@
         </div>
 
         <?php
+        //aici avem o functie pentrua afisa ce se afla in baza de date 
         function pre_r($array)
         {
             echo '<pre>';
@@ -79,8 +91,15 @@
 
         ?>
         <div class="row justify-content-center">
+
+            <!-- am folosit un form cu 2 imput-uri pentru nume si adressa   si un buton  -->
+            <!-- am folosoit diferite clase bootstrap pentru inputuri si buton -->
+            <!-- in acest form am folosit metoda post  -->
+
             <form action="process.php" method="POST">
+                <!-- aici accesam id din metoda post care v-a fi invizibil fata de user  -->
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
+
                 <div class="form-group">
                     <label>Nume</label>
                     <input type="text" name="nume" class="form-control" value="<?php echo $nume; ?>" placeholder="Scrie numele">
@@ -91,6 +110,7 @@
                 </div>
                 <div class="from-group">
                     <?php
+                    //aici verificam daca apasam butonul edit, butonul de save se va schimba in update
                     if ($update == true) :
                     ?>
                         <button type="submit" class="btn btn-primary" name="update">Update</button>
